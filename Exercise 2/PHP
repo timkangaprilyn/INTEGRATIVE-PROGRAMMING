@@ -1,0 +1,49 @@
+ <?php
+     $profiles=[
+     [
+        "name" => "Aprilyn D. Timkang",
+        "age" => 20,
+        "course" => "BSIT",
+        "hobbies" => "Playing basketball and watching movies.",
+        "address" => "Las Pinas City",
+        "image" => "aprilyn.jpeg",
+        "quote" =>"Success is not final, failure is not fatal: It is the courage to continue that counts."
+		
+      ],
+	   [
+        "name" => "Jocelyn C. Lobos",
+        "age" => 21,
+        "course" => "BSIT",
+        "hobbies" => "Watching anime, K-drama and reading manhwa.",
+        "address" => "Tunasan, Muntinlupa City",
+        "image" => "jc.jpeg",
+        "quote" => "Life is too short to waste a second."
+      ],
+	   [
+        "name" => "Xyrll D. Rongavilla",
+        "age" => 19,
+        "course" => "BSIT",
+        "hobbies" => "Playing Roblox, COD, and ML.",
+        "address" => " Cupang Muntilupa City",
+        "image" => "xy.jpeg",
+        "quote" => "A reader lives a thousand lives before he dies."
+      ],
+	   [
+        "name" => "Rizza May Ligad",
+        "age" => 20,
+        "course" => "BSIT",
+        "hobbies" => "Watching movies and sleeping.",
+        "address" => "Cupang Muntilupa City",
+        "image" => "Riz.jpeg",
+        "quote" => "Protect and prioritize your peace at all cost."
+       ]
+	  ];
+	  $hour = date("H");
+    if ($hour < 12) {
+      $greeting = "Good morning!";
+    } elseif ($hour < 18) {
+      $greeting = "Good afternoon!";
+    } else {
+      $greeting = "Good evening!";
+    }
+   ?>
