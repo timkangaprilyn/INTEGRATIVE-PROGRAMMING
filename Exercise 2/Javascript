@@ -1,0 +1,29 @@
+ <!-- JavaScript to enable flip on click -->
+  <script>
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        card.classList.toggle('is-flipped');
+      });
+    });
+  </script>
+  <button class="dark-btn"
+   onclick="DarkMode()">Dark Mode</button>
+
+   <!--JavaScript that enable us to turn our page into dark-mode-->
+<script>
+  function DarkMode() {
+    document.body.classList.toggle('dark-mode');
+  }
+</script>
+
+
+  <footer>
+  <p>&copy; <?php echo date("Y"); ?> Phantom Troupe. All rights reserved.</p>
+  </footer>
+
+
+
+  </body>
+</html>
+
