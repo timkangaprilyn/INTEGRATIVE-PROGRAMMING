@@ -1,0 +1,111 @@
+<?php
+date_default_timezone_set('Asia/Manila');
+$hour = date("H");
+
+if ($hour < 12) {
+    $greeting = "Good morning!";
+} elseif ($hour < 18) {
+    $greeting = "Good afternoon!";
+} else {
+    $greeting = "Good evening!";
+}
+
+// File storage
+$file = __DIR__ . "/profiles.json";
+
+// Load profiles safely
+$profiles = [];
+if (file_exists($file) && filesize($file) > 0) {
+    $data = file_get_contents($file);
+    $profiles = json_decode($data, true);
+    if (!is_array($profiles)) {
+        $profiles = [];
+    }
+}
+
+// Kung empty pa yung JSON, maglagay ng initial members (defaults)
+if (empty($profiles)) {
+    $profiles = [
+        [
+            "name" => "Aprilyn D. Timkang",
+            "age" => 20,
+            "course" => "BSIT",
+            "hobbies" => "Playing basketball and watching movies.",
+            "address" => "Las Pinas City",
+            "image" => "aprilyn.jpeg",
+            "quote" => "Success is not final, failure is not fatal: It is the courage to continue that counts."
+        ],
+        [
+            "name" => "Jocelyn C. Lobos",
+            "age" => 21,
+            "course" => "BSIT",
+            "hobbies" => "Watching anime, K-drama and reading manhwa.",
+            "address" => "Tunasan, Muntinlupa City",
+            "image" => "jc.jpeg",
+            "quote" => "Life is too short to waste a second."
+        ],
+        [
+            "name" => "Xyrll D. Rongavilla",
+            "age" => 19,
+            "course" => "BSIT",
+            "hobbies" => "Playing Roblox, COD, and ML.",
+            "address" => "Cupang Muntinlupa City",
+            "image" => "xy.jpeg",
+            "quote" => "A reader lives a thousand lives before he dies."
+        ],
+        [
+            "name" => "Rizza May Ligad",
+            "age" => 20,
+            "course" => "BSIT",
+            "hobbies" => "Watching movies and sleeping.",
+            "address" => "Cupang Muntinlupa City",
+            "image" => "Riz.jpeg",
+            "quote" => "Protect and prioritize your peace at all cost."
+        ]
+    ];
+    file_put_contents($file, json_encode($profiles, JSON_PRETTY_PRINT));
+}
+
+// Add new profile kapag nag-submit
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $imageName = 'default.jpeg'; // fallback image
+
+    if (isset($_FILES['new_image']) && $_FILES['new_image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = 'uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true); // create folder if it doesn't exist
+        }
+
+        $tmpName = $_FILES['new_image']['tmp_name'];
+        $originalName = basename($_FILES['new_image']['name']);
+        $imageName = $uploadDir . time() . '_' . $originalName;
+
+        move_uploaded_file($tmpName, $imageName);
+    }
+
+    $newProfile = [
+        "name" => $_POST['new_name'],
+        "age" => (int)$_POST['new_age'],
+        "course" => $_POST['new_course'],
+        "hobbies" => $_POST['new_hobbies'],
+        "address" => $_POST['new_address'],
+        "image" => $imageName,
+        "quote" => $_POST['new_quote']
+    ];
+    $profiles[] = $newProfile;
+
+    // Save updated list to JSON
+    file_put_contents($file, json_encode($profiles, JSON_PRETTY_PRINT));
+
+    // Redirect para maiwasan ang double submit
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
+}
+
+// Search filter
+$highlightName = isset($_GET['name']) ? strtolower(trim($_GET['name'])) : '';
+$displayProfiles = $profiles;
+if ($highlightName) {
+    $displayProfiles = array_filter($profiles, function($member) use ($highlightName) {
+        return strpos(strtolower($member['name']), $highlightName) !== false;
+    });
